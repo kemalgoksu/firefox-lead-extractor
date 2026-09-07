@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lead Pocket</title>
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <img src="../icons/icon.svg" alt="" width="28" height="28">
+      <div><strong>Lead Pocket</strong><span id="page-domain">Current page</span></div>
+    </div>
+    <button id="rescan" class="rescan" type="button" aria-label="Scan page again" title="Scan page again">&#8635;</button>
+  </header>
+
+  <main>
+    <section class="list-picker" aria-labelledby="save-heading">
+      <div class="picker-row">
+        <label id="save-heading" for="list-select">Save to</label>
+        <select id="list-select" aria-label="Selected contact list"></select>
+        <button id="toggle-create" class="secondary add-list" type="button" aria-expanded="false" aria-controls="create-list-form">+</button>
+      </div>
+      <form id="create-list-form" class="create-form" hidden>
+        <label class="sr-only" for="new-list-name">New list name</label>
+        <input id="new-list-name" maxlength="60" placeholder="New list name" autocomplete="off" required>
+        <button class="primary" type="submit">Create</button>
+      </form>
+    </section>
+
+    <div id="status" class="scan-status" role="status"><span class="spinner"></span> Reading this page&hellip;</div>
+    <div id="results" hidden></div>
+  </main>
+
+  <footer>
+    <span id="result-count">0 contacts found</span>
+    <button id="open-manager" class="manager-link" type="button">Manage lists <span aria-hidden="true">&rarr;</span></button>
+  </footer>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="../shared/extraction.js"></script>
+  <script src="../shared/storage.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

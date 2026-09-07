@@ -1,0 +1,90 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Manage Lists — Lead Pocket</title>
+  <link rel="stylesheet" href="../shared/base.css">
+  <link rel="stylesheet" href="manager.css">
+</head>
+<body>
+  <header class="app-header">
+    <a class="brand" href="manager.html" aria-label="Lead Pocket lists">
+      <img src="../icons/icon.svg" alt="" width="36" height="36">
+      <span><strong>Lead Pocket</strong><small>Contact lists</small></span>
+    </a>
+    <button id="export-all" class="secondary" type="button">Export all lists</button>
+  </header>
+
+  <main class="layout">
+    <aside class="sidebar">
+      <div class="sidebar-heading"><h1>Lists</h1><button id="show-create" class="icon-button" type="button" aria-label="Create a list">＋</button></div>
+      <form id="create-form" class="create-form" hidden>
+        <label class="sr-only" for="list-name">New list name</label>
+        <input id="list-name" maxlength="60" placeholder="List name" required>
+        <button class="primary" type="submit">Add</button>
+      </form>
+      <label class="search-field sidebar-search">
+        <span class="sr-only">Search lists</span>
+        <span class="search-icon" aria-hidden="true"></span>
+        <input id="list-search" type="search" placeholder="Search lists" autocomplete="off">
+      </label>
+      <nav id="list-nav" aria-label="Contact lists"></nav>
+      <p id="no-lists-found" class="no-results" hidden>No lists found.</p>
+    </aside>
+
+    <section class="content">
+      <div class="content-header">
+        <div>
+          <div class="title-row"><h2 id="current-name">My Leads</h2><button id="rename" class="text-button" type="button">Rename</button></div>
+          <p id="list-summary">0 saved contacts</p>
+          <p id="list-created" class="list-created"></p>
+        </div>
+        <div class="actions">
+          <button id="copy-emails" class="secondary" type="button">Copy emails</button>
+          <button id="export-list" class="primary" type="button">Export CSV</button>
+          <button id="delete-list" class="danger" type="button">Delete list</button>
+        </div>
+      </div>
+      <div class="contact-tools">
+        <label class="search-field contact-search">
+          <span class="sr-only">Search contacts</span>
+          <span class="search-icon" aria-hidden="true"></span>
+          <input id="contact-search" type="search" placeholder="Search contacts" autocomplete="off">
+        </label>
+        <div id="bulk-actions" class="bulk-actions" hidden>
+          <span id="selected-count">0 selected</span>
+          <div class="move-controls">
+            <label for="move-target">Move to</label>
+            <select id="move-target"></select>
+            <button id="move-selected" class="secondary" type="button">Move</button>
+          </div>
+          <button id="delete-selected" class="danger" type="button">Delete</button>
+        </div>
+      </div>
+      <div class="table-shell">
+        <table>
+          <thead><tr><th class="select-cell"><input id="select-all" type="checkbox" aria-label="Select all visible contacts"></th><th>Type</th><th>Contact</th><th>Source</th><th>Saved</th><th><span class="sr-only">Actions</span></th></tr></thead>
+          <tbody id="contacts"></tbody>
+        </table>
+        <div id="empty" class="empty-state" hidden><strong>No contacts yet</strong><span>Open the extension on a website to start saving leads.</span></div>
+        <div id="no-contacts-found" class="empty-state" hidden><strong>No matching contacts</strong><span>Try a different search.</span></div>
+      </div>
+    </section>
+  </main>
+
+  <dialog id="rename-dialog">
+    <form id="rename-form" method="dialog">
+      <h2>Rename list</h2>
+      <label for="rename-name">List name</label>
+      <input id="rename-name" maxlength="60" required>
+      <div class="dialog-actions"><button class="secondary" value="cancel" type="button" id="cancel-rename">Cancel</button><button class="primary" type="submit">Save</button></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script src="../shared/storage.js"></script>
+  <script src="../shared/csv.js"></script>
+  <script src="manager.js"></script>
+</body>
+</html>
