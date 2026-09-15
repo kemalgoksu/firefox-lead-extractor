@@ -34,6 +34,8 @@ test("page scanner returns rendered text, links, metadata, and protected emails"
     }
   };
   const source = fs.readFileSync(path.join(__dirname, "..", "content", "scanner.js"), "utf8");
+  const isolatedGlobal = {};
+  let expireSnapshot;
   const result = vm.runInNewContext(source, {
     document,
     location: { href: "https://www.example.com/contact", hostname: "www.example.com" },
@@ -41,7 +43,11 @@ test("page scanner returns rendered text, links, metadata, and protected emails"
     Array,
     String,
     parseInt,
-    globalThis: {}
+    globalThis: isolatedGlobal,
+    setTimeout(callback, delay) {
+      assert.equal(delay, 15000);
+      expireSnapshot = callback;
+    }
   });
 
   assert.equal(result.ok, true);
@@ -50,6 +56,9 @@ test("page scanner returns rendered text, links, metadata, and protected emails"
   assert.match(result.page.text, /Visible contact page/);
   assert.match(result.page.text, /\+1 415 555 2671/);
   assert.match(result.page.text, /team@example\.org/);
+  assert.equal(isolatedGlobal.__leadPocketSnapshot, result);
+  expireSnapshot();
+  assert.equal(isolatedGlobal.__leadPocketSnapshot, undefined);
 });
 
 test("manifest uses click-time injection instead of a persistent content script", () => {

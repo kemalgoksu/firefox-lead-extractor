@@ -28,6 +28,11 @@
     return trimPunctuation(value).toLowerCase();
   }
 
+  function decodeContact(value) {
+    try { return decodeURIComponent(value); }
+    catch (_) { return ""; }
+  }
+
   function isLikelyDate(value) {
     const candidate = trimPunctuation(value).trim();
     let match = candidate.match(/^(\d{4})([-/.])(\d{1,2})\2(\d{1,2})$/);
@@ -71,6 +76,7 @@
   function getSocialPlatform(value) {
     try {
       const url = new URL(value);
+      if (!["http:", "https:"].includes(url.protocol)) return "";
       const host = url.hostname.toLowerCase().replace(/^www\./, "");
       const matchedHost = Object.keys(SOCIAL_HOSTS).find((candidate) => host === candidate || host.endsWith(`.${candidate}`));
       if (!matchedHost) return "";
@@ -114,10 +120,10 @@
 
     for (const href of hrefs) {
       if (/^mailto:/i.test(href)) {
-        const email = decodeURIComponent(href.replace(/^mailto:/i, "").split(/[?;,]/)[0]);
+        const email = decodeContact(href.replace(/^mailto:/i, "").split(/[?;,]/)[0]);
         add("emails", email, normalizeEmail(email));
       } else if (/^tel:/i.test(href)) {
-        const phone = decodeURIComponent(href.replace(/^tel:/i, "").split(/[?;]/)[0]);
+        const phone = decodeContact(href.replace(/^tel:/i, "").split(/[?;]/)[0]);
         add("phones", phone, normalizePhone(phone));
       } else {
         const platform = getSocialPlatform(href);

@@ -61,6 +61,9 @@ globalThis.__leadPocketSnapshot = (() => {
   }
 })();
 
+// Expire the fallback even if the popup closes before it can retrieve it.
+setTimeout(() => { delete globalThis.__leadPocketSnapshot; }, 15000);
+
 // Keep the snapshot on the isolated content-script global. Some Firefox
 // versions omit a packaged file's completion value from InjectionResult.
 globalThis.__leadPocketSnapshot;

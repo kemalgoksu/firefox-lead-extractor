@@ -2,6 +2,16 @@ const test = require("node:test");
 const assert = require("node:assert/strict");
 const extraction = require("../shared/extraction.js");
 
+test("malformed contact links do not abort extraction of valid contacts", () => {
+  const result = extraction.extractContacts("hello@example.com", [
+    "mailto:bad%ZZ@example.com", "tel:%ZZ", "tel:+14155552671",
+    "mailto:sales@example.org", "ftp://github.com/example"
+  ]);
+  assert.deepEqual(result.emails.map((item) => item.normalizedValue), ["hello@example.com", "sales@example.org"]);
+  assert.deepEqual(result.phones.map((item) => item.normalizedValue), ["+14155552671"]);
+  assert.deepEqual(result.socials, []);
+});
+
 test("extracts and deduplicates emails from text and mailto links", () => {
   const result = extraction.extractContacts(
     "Write to Hello@Example.com or hello@example.com.",

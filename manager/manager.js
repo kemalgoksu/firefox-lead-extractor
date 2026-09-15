@@ -115,7 +115,7 @@
     const csv = LeadCsv.toCsv(data, listId);
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const date = new Date().toISOString().slice(0, 10);
-    const filename = `lead-pocket-${LeadCsv.sanitizeFilename(list ? list.name : "all-lists")}-${date}.csv`;
+    const filename = `leadfox-${LeadCsv.sanitizeFilename(list ? list.name : "all-lists")}-${date}.csv`;
     try { await browser.downloads.download({ url, filename, saveAs: true }); toast("CSV export ready"); }
     finally { setTimeout(() => URL.revokeObjectURL(url), 30000); }
   }

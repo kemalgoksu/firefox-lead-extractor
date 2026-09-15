@@ -53,19 +53,19 @@
       files: ["/content/scanner.js"]
     });
 
-    // Prefer the packaged script's completion values when Firefox supplies
-    // them. This is the simplest path and avoids a second execution entirely.
-    if (injected.some((entry) => entry && entry.result && entry.result.ok)) return injected;
-
-    // Read the explicitly stored snapshot in a separate call. This avoids a
-    // Firefox edge case where file injection succeeds but its result is absent.
+    // Retrieve and immediately clear the fallback snapshot from each frame.
+    // Firefox can omit completion values for packaged script injection.
     const retrieved = await browser.scripting.executeScript({
       target,
-      func: () => globalThis.__leadPocketSnapshot || null
+      func: () => {
+        const snapshot = globalThis.__leadPocketSnapshot || null;
+        delete globalThis.__leadPocketSnapshot;
+        return snapshot;
+      }
     });
     return retrieved.some((entry) => entry && entry.result && entry.result.ok)
       ? retrieved
-      : retrieved.concat(injected.filter((entry) => entry && entry.error));
+      : injected;
   }
 
   async function renderLists(selectedId) {
