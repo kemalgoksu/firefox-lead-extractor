@@ -14,10 +14,11 @@
 - Set your preferred public support contact in the listing; no email address is embedded.
 - Paste `PRIVACY.md` into the privacy-policy field.
 
-The existing add-on ID `lead-pocket@local.extension` is intentionally retained:
-it is an internal identifier and preserves extension identity and local storage.
-Do not change it after submission. If this ID already has an AMO listing, upload
-through that listing and ensure 2.0.0 is greater than its latest submitted version.
+The permanent add-on ID is `leadfox@kemalgoksu.com`. It replaces the development ID
+`lead-pocket@local.extension` before the first AMO submission. Firefox treats
+these as separate extensions; saved development contacts do not migrate automatically.
+Do not change the permanent ID after submission. For future releases, upload through
+the existing AMO listing and increment the version.
 
 ## Listing text
 
@@ -73,6 +74,12 @@ services. Page data is processed locally. User-requested clipboard and file expo
 are local operations. Clicking a source or social link performs ordinary navigation.
 
 ## Manual Firefox smoke check before publishing
+
+For a first install in a fresh Firefox profile, confirm that LeadFox appears on
+the navigation toolbar beside the address bar (`action.default_area: navbar`).
+Firefox remembers prior placement for an extension ID, including after reinstall;
+existing test profiles may need the user to pin the button manually. Users can
+change its placement after installation.
 
 1. Load the packaged extension through `about:debugging` in Firefox 142+.
 2. Serve the repository with a static HTTP server and open `tests/fixtures/contact.html`.
