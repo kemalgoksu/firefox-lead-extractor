@@ -69,5 +69,17 @@ test("manifest uses click-time injection instead of a persistent content script"
   assert.equal(manifest.host_permissions, undefined);
 
   const popup = fs.readFileSync(path.join(__dirname, "..", "popup", "popup.js"), "utf8");
-  assert.match(popup, /files:\s*\["\/content\/scanner\.js"\]/);
+  assert.match(popup, /files:\s*\["content\/scanner\.js"\]/);
+});
+
+test("extension pages load the cross-browser API bridge", () => {
+  for (const page of ["popup/popup.html", "manager/manager.html"]) {
+    const html = fs.readFileSync(path.join(__dirname, "..", page), "utf8");
+    assert.match(html, /shared\/browser-api\.js/);
+  }
+
+  const popup = fs.readFileSync(path.join(__dirname, "..", "popup", "popup.js"), "utf8");
+  const manager = fs.readFileSync(path.join(__dirname, "..", "manager", "manager.js"), "utf8");
+  assert.match(popup, /LeadBrowser\.scripting\.executeScript/);
+  assert.match(manager, /LeadBrowser\.downloads\.download/);
 });

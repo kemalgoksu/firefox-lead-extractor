@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const repo = LeadStorage.createRepository(browser);
+  const repo = LeadStorage.createRepository(LeadBrowser);
   const el = {
     nav: document.querySelector("#list-nav"), contacts: document.querySelector("#contacts"), empty: document.querySelector("#empty"),
     currentName: document.querySelector("#current-name"), summary: document.querySelector("#list-summary"), created: document.querySelector("#list-created"), toast: document.querySelector("#toast"),
@@ -116,7 +116,7 @@
     const url = URL.createObjectURL(new Blob([csv], { type: "text/csv;charset=utf-8" }));
     const date = new Date().toISOString().slice(0, 10);
     const filename = `leadfox-${LeadCsv.sanitizeFilename(list ? list.name : "all-lists")}-${date}.csv`;
-    try { await browser.downloads.download({ url, filename, saveAs: true }); toast("CSV export ready"); }
+    try { await LeadBrowser.downloads.download({ url, filename, saveAs: true }); toast("CSV export ready"); }
     finally { setTimeout(() => URL.revokeObjectURL(url), 30000); }
   }
 

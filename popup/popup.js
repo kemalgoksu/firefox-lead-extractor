@@ -1,7 +1,7 @@
 (function () {
   "use strict";
 
-  const repo = LeadStorage.createRepository(browser);
+  const repo = LeadStorage.createRepository(LeadBrowser);
   const elements = {
     listSelect: document.querySelector("#list-select"),
     createForm: document.querySelector("#create-list-form"),
@@ -34,7 +34,7 @@
         .map((entry) => entry && entry.error)
         .find(Boolean);
       const message = browserError && (browserError.message || String(browserError));
-      throw new Error(message || "The scanner ran, but Firefox returned no page data.");
+      throw new Error(message || "The scanner ran, but the browser returned no page data.");
     }
     const top = (injectionResults.find((entry) => entry.frameId === 0) || {}).result;
     const primary = top && top.ok ? top.page : snapshots[0].page;
@@ -48,14 +48,14 @@
 
   async function readFrames(tabId) {
     const target = { tabId, allFrames: true };
-    const injected = await browser.scripting.executeScript({
+    const injected = await LeadBrowser.scripting.executeScript({
       target,
-      files: ["/content/scanner.js"]
+      files: ["content/scanner.js"]
     });
 
     // Retrieve and immediately clear the fallback snapshot from each frame.
     // Firefox can omit completion values for packaged script injection.
-    const retrieved = await browser.scripting.executeScript({
+    const retrieved = await LeadBrowser.scripting.executeScript({
       target,
       func: () => {
         const snapshot = globalThis.__leadPocketSnapshot || null;
@@ -181,10 +181,10 @@
     elements.status.className = "scan-status";
     elements.status.innerHTML = '<span class="spinner"></span> Reading this page&hellip;';
     try {
-      const [tab] = await browser.tabs.query({ active: true, currentWindow: true });
+      const [tab] = await LeadBrowser.tabs.query({ active: true, currentWindow: true });
       activeUrl = tab && tab.url || "";
       if (!tab || !tab.id || !/^(https?|file):/i.test(tab.url || "")) {
-        throw new Error("Open a regular website or local HTML file to scan it. Firefox system and extension pages are protected.");
+        throw new Error("Open a regular website or local HTML file to scan it. Browser system and extension pages are protected.");
       }
       const injectionResults = await Promise.race([
         readFrames(tab.id),
@@ -199,7 +199,7 @@
       elements.status.className = "scan-status error";
       const denied = /permission|denied|restricted|privileged|cannot access|missing host/i.test(error && error.message || "");
       elements.status.textContent = denied
-        ? `Firefox blocked access to ${activeUrl ? new URL(activeUrl).hostname || "this page" : "this page"}. Try a normal public website; internal pages, the Mozilla Add-ons site, PDF viewer, and some local files are protected.`
+        ? `The browser blocked access to ${activeUrl ? new URL(activeUrl).hostname || "this page" : "this page"}. Try a normal public website; internal pages, extension stores, PDF viewers, and some local files are protected.`
         : (error.message || "This page could not be read. Try scanning again after it finishes loading.");
       elements.count.textContent = "Scan unavailable";
     } finally {
@@ -228,7 +228,7 @@
     await repo.selectList(elements.listSelect.value);
     updateSavedButtons(await repo.getData());
   });
-  document.querySelector("#open-manager").addEventListener("click", () => browser.tabs.create({ url: browser.runtime.getURL("manager/manager.html") }));
+  document.querySelector("#open-manager").addEventListener("click", () => LeadBrowser.tabs.create({ url: LeadBrowser.runtime.getURL("manager/manager.html") }));
   elements.rescan.addEventListener("click", scan);
 
   scan();

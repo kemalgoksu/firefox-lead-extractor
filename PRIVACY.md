@@ -1,6 +1,6 @@
 # LeadFox privacy policy
 
-LeadFox processes the page you choose to scan locally in Firefox. It does not
+LeadFox processes the page you choose to scan locally in your browser. It does not
 transmit scanned content or saved contacts to the developer or any server.
 There are no analytics, tracking, advertising, accounts, or remote code.
 
@@ -10,7 +10,7 @@ Temporary scan snapshots are cleared after retrieval. Results remain in popup
 memory while it is open. Only contacts you explicitly save are persisted.
 
 Saved data includes contact values and types, source URLs and domains, list
-names, and timestamps. It stays in Firefox's local extension storage and is
+names, and timestamps. It stays in your browser's local extension storage and is
 not synced by LeadFox. You can delete contacts or lists in Manage lists.
 Uninstalling the extension normally removes its local extension storage.
 

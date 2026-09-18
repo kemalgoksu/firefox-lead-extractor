@@ -3,11 +3,13 @@
   "version": "2.0.0",
   "license": "MIT",
   "private": true,
-  "description": "A local-first Firefox lead extractor extension",
+  "description": "A local-first lead extractor extension for Firefox and Chrome",
   "scripts": {
     "test": "node --test tests/*.test.js",
     "lint": "web-ext lint --source-dir . --warnings-as-errors",
-    "build": "web-ext build --source-dir . --artifacts-dir dist --overwrite-dest"
+    "build": "npm run build:firefox && npm run build:chrome",
+    "build:firefox": "web-ext build --source-dir . --artifacts-dir dist --filename leadfox-firefox.zip --overwrite-dest",
+    "build:chrome": "node scripts/build-chrome.js"
   },
   "devDependencies": {
     "web-ext": "10.6.0"
